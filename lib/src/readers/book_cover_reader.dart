@@ -10,36 +10,44 @@ import '../schema/opf/epub_metadata_meta.dart';
 
 class BookCoverReader {
   static Future<images.Image?> readBookCover(EpubBookRef bookRef) async {
-    var metaItems = bookRef.Schema!.Package!.Metadata!.MetaItems;
-    if (metaItems == null || metaItems.isEmpty) return null;
+    EpubManifestItem? coverManifestItem;
 
-    var coverMetaItem = metaItems.firstWhereOrNull(
-        (EpubMetadataMeta metaItem) =>
-            metaItem.Name != null && metaItem.Name!.toLowerCase() == 'cover');
-    if (coverMetaItem == null) return null;
-    if (coverMetaItem.Content == null || coverMetaItem.Content!.isEmpty) {
-      throw Exception(
-          'Incorrect EPUB metadata: cover item content is missing.');
+    final manifestItems = bookRef.Schema?.Package?.Manifest?.Items ?? [];
+    coverManifestItem = manifestItems.firstWhereOrNull((element) => element.Properties == 'cover-image');
+
+    EpubMetadataMeta? coverMetaItem;
+    if (coverManifestItem == null) {
+      var metaItems = bookRef.Schema!.Package!.Metadata!.MetaItems;
+      if (metaItems == null || metaItems.isEmpty) {
+        return null;
+      }
+
+      coverMetaItem = metaItems.firstWhereOrNull(
+        (EpubMetadataMeta metaItem) => metaItem.Name != null && metaItem.Name!.toLowerCase() == 'cover',
+      );
+      if (coverMetaItem == null) {
+        return null;
+      }
+      if (coverMetaItem.Content == null || coverMetaItem.Content!.isEmpty) {
+        throw Exception('Incorrect EPUB metadata: cover item content is missing.');
+      }
+
+      coverManifestItem = bookRef.Schema!.Package!.Manifest!.Items!.firstWhereOrNull(
+        (EpubManifestItem manifestItem) => manifestItem.Id!.toLowerCase() == coverMetaItem!.Content!.toLowerCase(),
+      );
     }
 
-    var coverManifestItem = bookRef.Schema!.Package!.Manifest!.Items!
-        .firstWhereOrNull((EpubManifestItem manifestItem) =>
-            manifestItem.Id!.toLowerCase() ==
-            coverMetaItem.Content!.toLowerCase());
     if (coverManifestItem == null) {
-      throw Exception(
-          'Incorrect EPUB manifest: item with ID = \"${coverMetaItem.Content}\" is missing.');
+      throw Exception('Incorrect EPUB manifest: item with ID = \"${coverMetaItem?.Content}\" is missing.');
     }
 
     EpubByteContentFileRef? coverImageContentFileRef;
     if (!bookRef.Content!.Images!.containsKey(coverManifestItem.Href)) {
-      throw Exception(
-          'Incorrect EPUB manifest: item with href = \"${coverManifestItem.Href}\" is missing.');
+      throw Exception('Incorrect EPUB manifest: item with href = \"${coverManifestItem.Href}\" is missing.');
     }
 
     coverImageContentFileRef = bookRef.Content!.Images![coverManifestItem.Href];
-    var coverImageContent =
-        await coverImageContentFileRef!.readContentAsBytes();
+    var coverImageContent = await coverImageContentFileRef!.readContentAsBytes();
     var retval = images.decodeImage(coverImageContent);
     return retval;
   }

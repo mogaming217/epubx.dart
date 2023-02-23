@@ -14,13 +14,7 @@ class EpubPackage {
   EpubGuide? Guide;
 
   @override
-  int get hashCode => hashObjects([
-        Version.hashCode,
-        Metadata.hashCode,
-        Manifest.hashCode,
-        Spine.hashCode,
-        Guide.hashCode
-      ]);
+  int get hashCode => hashObjects([Version.hashCode, Metadata.hashCode, Manifest.hashCode, Spine.hashCode, Guide.hashCode]);
 
   @override
   bool operator ==(other) {
