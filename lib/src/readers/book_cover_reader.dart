@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart' show IterableExtension;
-import 'package:image/image.dart' as images;
 
 import '../ref_entities/epub_book_ref.dart';
 import '../ref_entities/epub_byte_content_file_ref.dart';
@@ -9,7 +9,7 @@ import '../schema/opf/epub_manifest_item.dart';
 import '../schema/opf/epub_metadata_meta.dart';
 
 class BookCoverReader {
-  static Future<images.Image?> readBookCover(EpubBookRef bookRef) async {
+  static Future<Uint8List?> readBookCover(EpubBookRef bookRef) async {
     EpubManifestItem? coverManifestItem;
 
     final manifestItems = bookRef.Schema?.Package?.Manifest?.Items ?? [];
@@ -48,7 +48,6 @@ class BookCoverReader {
 
     coverImageContentFileRef = bookRef.Content!.Images![coverManifestItem.Href];
     var coverImageContent = await coverImageContentFileRef!.readContentAsBytes();
-    var retval = images.decodeImage(coverImageContent);
-    return retval;
+    return Uint8List.fromList(coverImageContent);
   }
 }
