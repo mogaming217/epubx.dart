@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:epubx/epubx.dart' as epub;
-import 'package:image/image.dart' as image;
 import 'package:flutter/services.dart';
 
 void main() => runApp(EpubWidget());
@@ -192,14 +191,14 @@ Widget buildEpubWidget(epub.EpubBookRef book) {
       Padding(
         padding: EdgeInsets.only(top: 15.0),
       ),
-      FutureBuilder<epub.Image?>(
+      FutureBuilder<Uint8List?>(
         future: cover,
-        builder: (context, AsyncSnapshot<epub.Image?> snapshot) {
+        builder: (context, AsyncSnapshot<Uint8List?> snapshot) {
           if (snapshot.hasData) {
             return Column(
               children: <Widget>[
                 Text("Cover", style: TextStyle(fontSize: 20.0)),
-                Image.memory(Uint8List.fromList(image.encodePng(snapshot.data!))),
+                Image.memory(snapshot.data!),
               ],
             );
           } else if (snapshot.hasError) {

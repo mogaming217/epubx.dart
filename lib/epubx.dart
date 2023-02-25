@@ -15,4 +15,3 @@ export 'src/entities/epub_content_file.dart';
 export 'src/entities/epub_text_content_file.dart';
 export 'src/schema/opf/epub_package.dart';
 export 'src/schema/navigation/epub_navigation.dart';
-export 'package:image/image.dart' show Image;
