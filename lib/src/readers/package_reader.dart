@@ -260,7 +260,7 @@ class PackageReader {
           result.Name = attributeValue;
           break;
         case 'content':
-          result.Content = attributeValue;
+          result.Value = attributeValue;
           break;
       }
     });
@@ -288,7 +288,7 @@ class PackageReader {
           break;
       }
     });
-    result.Content = metadataMetaNode.text;
+    result.Value = metadataMetaNode.text;
     return result;
   }
 

@@ -28,17 +28,17 @@ class BookCoverReader {
       if (coverMetaItem == null) {
         return null;
       }
-      if (coverMetaItem.Content == null || coverMetaItem.Content!.isEmpty) {
+      if (coverMetaItem.Value == null || coverMetaItem.Value!.isEmpty) {
         throw Exception('Incorrect EPUB metadata: cover item content is missing.');
       }
 
       coverManifestItem = bookRef.Schema!.Package!.Manifest!.Items!.firstWhereOrNull(
-        (EpubManifestItem manifestItem) => manifestItem.Id!.toLowerCase() == coverMetaItem!.Content!.toLowerCase(),
+        (EpubManifestItem manifestItem) => manifestItem.Id!.toLowerCase() == coverMetaItem!.Value!.toLowerCase(),
       );
     }
 
     if (coverManifestItem == null) {
-      throw Exception('Incorrect EPUB manifest: item with ID = \"${coverMetaItem?.Content}\" is missing.');
+      throw Exception('Incorrect EPUB manifest: item with ID = \"${coverMetaItem?.Value}\" is missing.');
     }
 
     EpubByteContentFileRef? coverImageContentFileRef;

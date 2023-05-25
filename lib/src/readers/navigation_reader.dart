@@ -131,7 +131,6 @@ class NavigationReader {
         throw Exception('EPUB parsing error: TOC file $_tocFileEntryPath not found in archive.');
       }
       //Get relative toc file path
-      print('topFileEntryPath: $_tocFileEntryPath');
       final tocPathSplits = _tocFileEntryPath!.split('/');
       if (tocPathSplits.length >= 2) {
         _tocFileEntryPath = ((_tocFileEntryPath!.split('/')..removeLast())..removeAt(0)).join('/') + '/';
