@@ -12,17 +12,9 @@ class EpubWidget extends StatefulWidget {
 class EpubState extends State<EpubWidget> {
   Future<epub.EpubBookRef>? book;
 
-  final _urlController = TextEditingController();
-
-  void fetchBookButton() {
+  void onSelectBook(String filename) {
     setState(() {
-      book = fetchBook(_urlController.text);
-    });
-  }
-
-  void fetchBookPresets(String link) {
-    setState(() {
-      book = fetchBook(link);
+      book = fetchBook(filename);
     });
   }
 
@@ -41,75 +33,13 @@ class EpubState extends State<EpubWidget> {
               child: Column(
                 children: [
                   Padding(padding: EdgeInsets.only(top: 16.0)),
-                  Text(
-                    'Epub Inspector',
-                    style: TextStyle(fontSize: 25.0),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 50.0)),
-                  Text(
-                    'Enter the Url of an Epub to view some of it\'s metadata.',
-                    style: TextStyle(fontSize: 18.0),
-                    textAlign: TextAlign.center,
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 20.0)),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: "Enter Url",
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                        borderSide: BorderSide(),
-                      ),
-                    ),
-                    validator: (val) {
-                      if (val!.length == 0) {
-                        return "Url cannot be empty";
-                      } else {
-                        return null;
-                      }
-                    },
-                    controller: _urlController,
-                    keyboardType: TextInputType.url,
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 20.0),
+                  ElevatedButton(
+                    child: Text("Sample1"),
+                    onPressed: () => onSelectBook('sample'),
                   ),
                   ElevatedButton(
-                    onPressed: fetchBookButton,
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(8.0)),
-                      textStyle: MaterialStateProperty.all<TextStyle>(TextStyle(
-                        color: Colors.white,
-                      )),
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-                    ),
-                    child: Text("Inspect Book"),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 25.0)),
-                  Text(
-                    'Or select available links:',
-                    style: TextStyle(fontSize: 18.0),
-                    textAlign: TextAlign.center,
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 12.0)),
-                  Column(
-                    children: [
-                      ...[
-                        'https://filesamples.com/samples/ebook/epub/Around%20the%20World%20in%2028%20Languages.epub',
-                        'https://filesamples.com/samples/ebook/epub/Sway.epub',
-                        'https://filesamples.com/samples/ebook/epub/Alices%20Adventures%20in%20Wonderland.epub',
-                        'https://filesamples.com/samples/ebook/epub/sample1.epub',
-                      ]
-                          .map((link) => TextButton(
-                                child: Text(link),
-                                onPressed: () => fetchBookPresets(link),
-                              ))
-                          .cast<Widget>()
-                          .toList(),
-                    ],
+                    child: Text("Sample2"),
+                    onPressed: () => onSelectBook('sample2'),
                   ),
                   Padding(padding: EdgeInsets.only(top: 25.0)),
                   Center(
@@ -211,11 +141,7 @@ Widget buildEpubWidget(epub.EpubBookRef book) {
   ));
 }
 
-// Needs a url to a valid url to an epub such as
-// https://www.gutenberg.org/ebooks/11.epub.images
-// or
-// https://www.gutenberg.org/ebooks/19002.epub.images
-Future<epub.EpubBookRef> fetchBook(String url) async {
+Future<epub.EpubBookRef> fetchBook(String filename) async {
   // // Hard coded to Alice Adventures In Wonderland in Project Gutenberb
   // final response = await http.get(Uri.parse(url));
 
@@ -227,6 +153,6 @@ Future<epub.EpubBookRef> fetchBook(String url) async {
   //   throw Exception('Failed to load epub');
   // }
 
-  final bundle = await rootBundle.load('assets/sample.epub');
+  final bundle = await rootBundle.load('assets/$filename.epub');
   return epub.EpubReader.openBook(bundle.buffer.asUint8List());
 }
