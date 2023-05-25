@@ -2,7 +2,11 @@ import 'package:quiver/core.dart';
 
 class EpubMetadataMeta {
   String? Name;
+
+  /// xmlの値のこと<xml>{value}</xml>
   String? Value;
+
+  String? Content;
   String? Id;
   String? Refines;
   String? Property;
@@ -10,7 +14,15 @@ class EpubMetadataMeta {
   Map<String, String>? Attributes;
 
   @override
-  int get hashCode => hashObjects([Name.hashCode, Value.hashCode, Id.hashCode, Refines.hashCode, Property.hashCode, Scheme.hashCode]);
+  int get hashCode => hashObjects([
+        Name.hashCode,
+        Value.hashCode,
+        Content.hashCode,
+        Id.hashCode,
+        Refines.hashCode,
+        Property.hashCode,
+        Scheme.hashCode,
+      ]);
 
   @override
   bool operator ==(other) {
@@ -18,6 +30,7 @@ class EpubMetadataMeta {
     if (otherAs == null) return false;
     return Name == otherAs.Name &&
         Value == otherAs.Value &&
+        Content == otherAs.Content &&
         Id == otherAs.Id &&
         Refines == otherAs.Refines &&
         Property == otherAs.Property &&

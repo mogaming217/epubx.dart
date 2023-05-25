@@ -25,16 +25,16 @@ class BookCoverReader {
       coverMetaItem = metaItems.firstWhereOrNull(
         (EpubMetadataMeta metaItem) => metaItem.Name != null && metaItem.Name!.toLowerCase() == 'cover',
       );
-      if (coverMetaItem == null) {
-        return null;
-      }
-      if (coverMetaItem.Value == null || coverMetaItem.Value!.isEmpty) {
-        throw Exception('Incorrect EPUB metadata: cover item content is missing.');
-      }
 
-      coverManifestItem = bookRef.Schema!.Package!.Manifest!.Items!.firstWhereOrNull(
-        (EpubManifestItem manifestItem) => manifestItem.Id!.toLowerCase() == coverMetaItem!.Value!.toLowerCase(),
-      );
+      if (coverMetaItem != null) {
+        if (coverMetaItem.Value != null && coverMetaItem.Value!.isNotEmpty) {
+          coverManifestItem = bookRef.Schema!.Package!.Manifest!.Items!.firstWhereOrNull(
+            (EpubManifestItem manifestItem) => manifestItem.Id!.toLowerCase() == coverMetaItem!.Value!.toLowerCase(),
+          );
+        } else if (coverMetaItem.Content?.isNotEmpty == true) {
+          coverManifestItem = manifestItems.firstWhereOrNull((e) => e.Id?.toLowerCase() == coverMetaItem?.Content?.toLowerCase());
+        }
+      }
     }
 
     if (coverManifestItem == null) {

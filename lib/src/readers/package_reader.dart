@@ -277,6 +277,9 @@ class PackageReader {
         case 'id':
           result.Id = attributeValue;
           break;
+        case 'name':
+          result.Name = attributeValue;
+          break;
         case 'refines':
           result.Refines = attributeValue;
           break;
@@ -285,6 +288,9 @@ class PackageReader {
           break;
         case 'scheme':
           result.Scheme = attributeValue;
+          break;
+        case 'content':
+          result.Content = attributeValue;
           break;
       }
     });
